@@ -42,10 +42,13 @@ It started out with Terra, but it will now be moving onto _[Phantom](https://pha
 
 </p>
 
+
 <p align="center">
 
-![Hackclub Flag, yay!](/Assets/photo1.png)
-![Hackclub Phantom Logo... ooooohhh scary](/Assets/photo4.png)
-![Hackclub Terra Fox, old...](/Assets/photo2.png)
+<img src="/Assets/photo1.png" width="150" height="150" alt="Hackclub Flag... yay!">          
+
+<img src="/Assets/photo4.png" width="100" height="100" alt="Hackclub Phantom Logo... ooooohhh scary">          
+
+<img src="/Assets/photo2.png" width="100" height="100" alt="Hackclub Terra Fox, old...]">
 
 </p>
