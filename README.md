@@ -16,10 +16,11 @@ The **projected** OS versions will be:
  - Linux (Ubuntu)
  - If more **OS**s are requested, then create a [Suggest Issue](https://github.com/sadgituser/CRT-MultiApp/issues/new?template=feature_suggest.md) with the code for the build.yml GitHub Actions file!
 
+<p align="center">
 
 ![App Screenshot](/Assets/app_screenshotpng.png)
 
-
+</p>
 
 <p align="center">
     
