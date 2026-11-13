@@ -14,7 +14,7 @@ The **projected** OS versions will be:
  - Windows (x64)
  - MacOS (15 - Apple Silicon)
  - Linux (Ubuntu)
- - If more **OS**s are requested, then create a [Suggest Issue](https://github.com/sadgituser/CRT-MultiApp/issues/new?template=bug_report.md) with the code for the build.yml GitHub Actions file!
+ - If more **OS**s are requested, then create a [Suggest Issue](https://github.com/sadgituser/CRT-MultiApp/issues/new?template=feature_suggest.md) with the code for the build.yml GitHub Actions file!
 
 
 ![App Screenshot](/Assets/app_screenshotpng.png)
@@ -36,11 +36,15 @@ If you want to make an issue, then you can go to [Bug Report](https://github.com
 
 [Hackclub Assets](https://hackclub.com/brand) & [Music Assets](https://pixabay.com/sound-effects/technology-noisy-computer-hum-34737/) & Terra Fox was snipped and edited from the [Terra](terra.hackclub.com) website! Check it out along with other [HC](https://hackclub.com) projects!
 
-Made for the [Hackclub Terra](https://terra.hackclub.com) project for [Hackclub](https://hackclub.com).
+Made for the [Hackclub Terra](https://terra.hackclub.com) project (originally) for [Hackclub](https://hackclub.com).
+It started out with Terra, but it will now be moving onto _[Phantom](https://phantom.hackclub.com)_
 
 </p>
 
+<p align="center">
 
-![Hackclub Flag](/Assets/photo1.png)        
-![Hackclub Terra Fox](/Assets/photo2.png)
+![Hackclub Flag, yay!](/Assets/photo1.png)
+![Hackclub Phantom Logo... ooooohhh scary](/Assets/photo4.png)
+![Hackclub Terra Fox, old...](/Assets/photo2.png)
 
+</p>
