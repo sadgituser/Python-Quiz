@@ -8,6 +8,8 @@ import random
 import time
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
+import stateVars
+import quiz_defs
 
 # Early definitions
 def resource_path(relative_path):
@@ -54,27 +56,27 @@ pygame.mixer.init()
 
 
 # Initialise main window
-root=tk.Tk()
-root.title("Quiz")
-root.geometry(f"{rootWidth}x{rootHeight}+100+100")
-root.resizable(False, False)
-root.configure(bg=background_colour)
+stateVars.stateVars.root=tk.Tk()
+stateVars.stateVars.root.title("Quiz")
+stateVars.stateVars.root.geometry(f"{rootWidth}x{rootHeight}+100+100")
+stateVars.stateVars.root.resizable(False, False)
+stateVars.stateVars.root.configure(bg=background_colour)
 try:
-    root.iconbitmap(app_icon)
+    stateVars.stateVars.root.iconbitmap(app_icon)
 except:
     pass
 
 
 # CRT Effect
-crt_canvas = tk.Canvas(root, width=rootWidth, height=rootHeight, bg=background_colour, highlightthickness=0)
-crt_canvas.place(x=0, y=0, relwidth=1, relheight=1)
+stateVars.stateVars.crt_canvas = tk.Canvas(stateVars.stateVars.root, width=rootWidth, height=rootHeight, bg=background_colour, highlightthickness=0)
+stateVars.stateVars.crt_canvas.place(x=0, y=0, relwidth=1, relheight=1)
 
 # Scan Lines
 for y in range(0, rootHeight, 3):
-    crt_canvas.create_line(0, y, rootWidth, y, fill="#001100", stipple="gray50", tags="scanlines")
+    stateVars.stateVars.crt_canvas.create_line(0, y, rootWidth, y, fill="#001100", stipple="gray50", tags="scanlines")
 
 # Moving Scanline
-moving_scanline = crt_canvas.create_line(0, 0, rootWidth, 0, fill="#00FF44", width=10, stipple="gray25")
+moving_scanline = stateVars.stateVars.crt_canvas.create_line(0, 0, rootWidth, 0, fill="#00FF44", width=10, stipple="gray25")
 scanline_y = 0
 
 def animate_crt_beam():
@@ -82,8 +84,8 @@ def animate_crt_beam():
     scanline_y += 3
     if scanline_y > rootHeight:
         scanline_y = 0
-    crt_canvas.coords(moving_scanline, 0, scanline_y, rootWidth, scanline_y)
-    root.after(20, animate_crt_beam)
+    stateVars.stateVars.crt_canvas.coords(moving_scanline, 0, scanline_y, rootWidth, scanline_y)
+    stateVars.stateVars.root.after(20, animate_crt_beam)
 animate_crt_beam()
 
 
@@ -94,7 +96,7 @@ def apply_crt_flicker():
     titleLabel.configure(fg=chosen_colour)
     termText.configure(fg=chosen_colour)
     termEntry.configure(fg=chosen_colour)
-    root.after(random.randint(60, 180), apply_crt_flicker)
+    stateVars.stateVars.root.after(random.randint(60, 180), apply_crt_flicker)
 
 
 # Fonts
@@ -109,7 +111,7 @@ winnerFont = font.Font(family=mainFontFamily, size=48, underline=True, weight="b
 
 
 # Widgets
-titleLabel = tk.Label(root,
+titleLabel = tk.Label(stateVars.stateVars.root,
     text="THE CRT",
     font=titleFont,
     bg=background_colour,
@@ -120,7 +122,7 @@ titleLabel = tk.Label(root,
 titleLabel.place(x=(rootWidth // 2), y=20, anchor="n")
 
 # Clock
-clockLabel = tk.Label(root,
+clockLabel = tk.Label(stateVars.stateVars.root,
     font=descFont,
     bg=background_colour,
     fg=foreground_colour
@@ -130,13 +132,13 @@ clockLabel.place(x=(rootWidth - 15), y=20, anchor="ne")
 def update_clock():
     current_time = time.strftime("%H:%M:%S")
     clockLabel.config(text=current_time)
-    root.after(500, update_clock)
+    stateVars.stateVars.root.after(500, update_clock)
 update_clock()
 
 
 # Gamble
 def testLuck():
-    luckPopup = tk.Toplevel(root)
+    luckPopup = tk.Toplevel(stateVars.stateVars.root)
     luckPopup.title("TEST YOUR LUCK...")
     luckPopup.geometry("300x300+150+150")
     luckPopup.resizable(False, False)
@@ -172,7 +174,7 @@ def testLuck():
         if currentLuck == "FAIL!":
             messagebox.showerror("You Failed", "You lost the gamble...")
             luckPopup.destroy()
-            root.destroy()
+            stateVars.stateVars.root.destroy()
         else:
             messagebox.showinfo("You Win", "Your gamble paid off! You get...")
             messagebox.showinfo("Nothing", "NOTHING! :o")
@@ -188,7 +190,7 @@ def openMePages():
 
 
 # Terminal Output Box
-termText = tk.Text(root, 
+termText = tk.Text(stateVars.stateVars.root, 
     bg="#000500", 
     fg=foreground_colour, 
     insertbackground=foreground_colour, 
@@ -200,7 +202,7 @@ termText.insert("end", "CRT OS v1.0\nType 'help' for commands. \n\n> ")
 termText.config(state="disabled")
 
 # Terminal Entry
-promptLabel = tk.Label(root, 
+promptLabel = tk.Label(stateVars.root, 
     text=">",
     font=descFont,
     bg=background_colour,
@@ -208,7 +210,7 @@ promptLabel = tk.Label(root,
 )
 promptLabel.place(x=15, y=(rootHeight - 55))
 
-termEntry = tk.Entry(root,
+termEntry = tk.Entry(stateVars.root,
     bg=background_colour,
     fg=foreground_colour,
     insertbackground=foreground_colour,
@@ -221,26 +223,26 @@ termEntry.place(x=35, y=(rootHeight - 55), width=(rootWidth - 50), height=30)
 termEntry.focus()
 
 
-quizPlayerLabel = tk.Label(root, 
+quizPlayerLabel = tk.Label(stateVars.root, 
     font=playerFont, 
     bg=background_colour, 
     fg=foreground_colour, 
     justify="center"
 )
-quizQuestionLabel = tk.Label(root, 
+quizQuestionLabel = tk.Label(stateVars.root, 
     font=questionFont, 
     bg=background_colour, 
     fg=foreground_colour, 
     wraplength=(rootWidth - 50), 
     justify="center"
 )
-quizTimerLabel = tk.Label(root, 
+quizTimerLabel = tk.Label(stateVars.root, 
     font=timerFont, 
     bg=background_colour, 
     fg=foreground_colour, 
     justify="center"
 )
-quizStatusLabel = tk.Label(root, 
+quizStatusLabel = tk.Label(stateVars.root, 
     font=statusFont, 
     bg=background_colour, 
     fg=foreground_colour, 
@@ -268,7 +270,7 @@ def process_print_queue():
             termText.insert("end", remaining_text[0])
             termText.see("end")
             termText.config(state="disabled")
-            root.after(25, lambda: type_chars(remaining_text[1:]))
+            stateVars.root.after(25, lambda: type_chars(remaining_text[1:]))
         else:
             termText.config(state="normal")
             if print_queue:
@@ -279,7 +281,7 @@ def process_print_queue():
             termText.config(state="disabled")
             process_print_queue()
 
-    root.after(100, lambda: type_chars(text_to_print))
+    stateVars.root.after(100, lambda: type_chars(text_to_print))
 
 def print_term(text):
     global is_printing
@@ -380,25 +382,25 @@ def toggle_pause():
     is_paused = not is_paused
     if is_paused:
         if current_timer_id:
-            root.after_cancel(current_timer_id)
+            stateVars.root.after_cancel(current_timer_id)
             current_timer_id = None
         quizPauseButton.config(text="RESUME")
     else:
         quizPauseButton.config(text="PAUSE")
-        current_timer_id = root.after(1000, update_quiz_timer)
+        current_timer_id = stateVars.root.after(1000, update_quiz_timer)
 
 def force_quit_quiz():
     global current_timer_id, quiz_setup_step, waiting_for_next, is_paused, intro_timer_id
     if current_timer_id:
-        root.after_cancel(current_timer_id)
+        stateVars.root.after_cancel(current_timer_id)
         current_timer_id = None
     if intro_timer_id:
-        root.after_cancel(intro_timer_id)
+        stateVars.root.after_cancel(intro_timer_id)
         intro_timer_id = None
     waiting_for_next = False
     is_paused = False
     quiz_setup_step = 0
-    root.unbind("<Key>")
+    stateVars.root.unbind("<Key>")
     reset_screen_colours()
     quizPlayerLabel.place_forget()
     quizQuestionLabel.place_forget()
@@ -407,12 +409,12 @@ def force_quit_quiz():
     quizPauseButton.place_forget()
     quizQuitButton.place_forget()
     titleLabel.place(x=(rootWidth // 2), y=20, anchor="n")
-    crt_canvas.itemconfigure(moving_scanline, state="normal")
+    stateVars.crt_canvas.itemconfigure(moving_scanline, state="normal")
     pygame.mixer.music.set_volume(0.3)
     show_terminal_from_quiz()
     print_term("Quiz force quit by user.\n")
 
-quizPauseButton = tk.Button(root,
+quizPauseButton = tk.Button(stateVars.root,
     text="PAUSE",
     font=descFont,
     bg=background_colour,
@@ -420,7 +422,7 @@ quizPauseButton = tk.Button(root,
     relief="solid",
     command=toggle_pause
 )
-quizQuitButton = tk.Button(root,
+quizQuitButton = tk.Button(stateVars.root,
     text="QUIT QUIZ",
     font=descFont,
     bg=background_colour,
@@ -447,7 +449,7 @@ def load_default_questions():
         "Which country is home to the Great Pyramid of Giza?", 
         "What is the fastest land animal?", 
         "Who invented the telephone?", 
-        "What is the square root of 144?", 
+        "What is the square stateVars.root of 144?", 
         "Which gas do plants absorb from the atmosphere?", 
         "What is the smallest prime number?", 
         "Who was the first person to walk on the Moon?", 
@@ -559,16 +561,16 @@ def hide_terminal_for_quiz():
     termText.place_forget()
     promptLabel.place_forget()
     termEntry.place_forget()
-    crt_canvas.itemconfigure("scanlines", state="hidden")
-    crt_canvas.itemconfigure(moving_scanline, state="hidden")
-    root.focus_set()
+    stateVars.crt_canvas.itemconfigure("scanlines", state="hidden")
+    stateVars.crt_canvas.itemconfigure(moving_scanline, state="hidden")
+    stateVars.root.focus_set()
 
 def show_terminal_from_quiz():
     termText.place(x=15, y=80, width=(rootWidth - 30), height=(rootHeight - 200))
     promptLabel.place(x=15, y=(rootHeight - 55))
     termEntry.place(x=35, y=(rootHeight - 55), width=(rootWidth - 50), height=30)
-    crt_canvas.itemconfigure("scanlines", state="normal")
-    crt_canvas.itemconfigure(moving_scanline, state="normal")
+    stateVars.crt_canvas.itemconfigure("scanlines", state="normal")
+    stateVars.crt_canvas.itemconfigure(moving_scanline, state="normal")
     termEntry.focus()
 
 def show_next_quiz_turn():
@@ -577,10 +579,10 @@ def show_next_quiz_turn():
     is_paused = False
 
     if intro_timer_id:
-        root.after_cancel(intro_timer_id)
+        stateVars.root.after_cancel(intro_timer_id)
         intro_timer_id = None
     if current_timer_id:
-        root.after_cancel(current_timer_id)
+        stateVars.root.after_cancel(current_timer_id)
         current_timer_id = None
 
 
@@ -620,8 +622,8 @@ def show_next_quiz_turn():
     quizStatusLabel.place(x=(rootWidth // 2), y=150, anchor="n")
 
 
-    root.unbind("<Key>")
-    root.after(3000, start_actual_question)
+    stateVars.root.unbind("<Key>")
+    stateVars.root.after(3000, start_actual_question)
 
 def start_actual_question():
     global current_timer_id, time_remaining
@@ -640,7 +642,7 @@ def start_actual_question():
     quizStatusLabel.place(x=(rootWidth // 2), y=330, anchor="n")
 
     if current_timer_id:
-        root.after_cancel(current_timer_id)
+        stateVars.root.after_cancel(current_timer_id)
         current_timer_id = None
 
     time_remaining = quiz_settings['time_limit']
@@ -650,8 +652,8 @@ def start_actual_question():
     quizPauseButton.place(x=(rootWidth // 2) - 110, y=500, width=100, height=40)
     quizQuitButton.place(x=(rootWidth // 2) + 10, y=500, width=100, height=40)
 
-    root.bind("<Key>", handle_quiz_keypress)
-    current_timer_id = root.after(1000, update_quiz_timer)
+    stateVars.root.bind("<Key>", handle_quiz_keypress)
+    current_timer_id = stateVars.root.after(1000, update_quiz_timer)
 
 def update_quiz_timer():
     global time_remaining, current_timer_id, waiting_for_next, is_paused
@@ -660,7 +662,7 @@ def update_quiz_timer():
     if time_remaining > 0:
         time_remaining -= 1
         quizTimerLabel.config(text=f"Time: {time_remaining}s")
-        current_timer_id = root.after(1000, update_quiz_timer)
+        current_timer_id = stateVars.root.after(1000, update_quiz_timer)
     else:
         handle_timeout()
 
@@ -677,11 +679,11 @@ def flash_screen(colour, message):
     global waiting_for_next, current_timer_id
     waiting_for_next = True
     if current_timer_id:
-        root.after_cancel(current_timer_id)
+        stateVars.root.after_cancel(current_timer_id)
         current_timer_id = None
 
-    root.configure(bg=colour)
-    crt_canvas.configure(bg=colour)
+    stateVars.root.configure(bg=colour)
+    stateVars.crt_canvas.configure(bg=colour)
     quizPlayerLabel.config(bg=colour, fg="#000000")
     quizQuestionLabel.config(bg=colour, fg="#000000", font=winnerFont)
     quizTimerLabel.config(bg=colour, fg="#000000")
@@ -696,8 +698,8 @@ def prepare_for_next_turn():
     waiting_for_next = True
 
 def reset_screen_colours():
-    root.configure(bg=background_colour)
-    crt_canvas.configure(bg=background_colour)
+    stateVars.root.configure(bg=background_colour)
+    stateVars.crt_canvas.configure(bg=background_colour)
     quizPlayerLabel.config(bg=background_colour, fg=foreground_colour, font=playerFont)
     quizQuestionLabel.config(bg=background_colour, fg=foreground_colour, font=questionFont)
     quizTimerLabel.config(bg=background_colour, fg=foreground_colour, font=timerFont)
@@ -731,10 +733,10 @@ def handle_quiz_keypress(event):
                 quizPauseButton.place(x=(rootWidth // 2) - 100, y=500, width=100, height=40)
                 quizQuitButton.place(x=(rootWidth // 2 + 10), y=500, width=100, height=40)
 
-                root.bind("<Key>", handle_quiz_keypress)
+                stateVars.root.bind("<Key>", handle_quiz_keypress)
                 if current_timer_id:
-                    root.after_cancel(current_timer_id)
-                current_timer_id = root.after(1000, update_quiz_timer)
+                    stateVars.root.after_cancel(current_timer_id)
+                current_timer_id = stateVars.root.after(1000, update_quiz_timer)
             else:
                 quizPlayerLabel.place_forget()
                 quizQuestionLabel.place_forget()
@@ -751,7 +753,7 @@ def handle_quiz_keypress(event):
 
 
     if current_timer_id:
-        root.after_cancel(current_timer_id)
+        stateVars.root.after_cancel(current_timer_id)
         current_timer_id = None
 
     if key == 'y':
@@ -776,7 +778,7 @@ def handle_quiz_keypress(event):
             player['last_chance'] = True
             time_remaining += 5
             is_last_chance_action = True
-            quizTimerLabel.config(text=f"Time: {time_remaining}")
+            quizTimerLabel.config(text=f"Time: {time_remaining}s")
             flash_screen("#8B0000", "LAST CHANCE TRIGGERED")
 
     return "break"
@@ -786,7 +788,7 @@ def show_winner_screen(winner_name):
     waiting_for_next = True
     winner_can_exit = False
     if current_timer_id:
-        root.after_cancel(current_timer_id)
+        stateVars.root.after_cancel(current_timer_id)
         current_timer_id = None
 
     titleLabel.place_forget()
@@ -801,38 +803,38 @@ def show_winner_screen(winner_name):
 
     winner_flashing = True
     flash_winner_colors()
-    root.bind("<Key>", handle_winner_keypress)
-    root.after(7000, lambda: globals().update(winner_can_exit=True))
+    stateVars.root.bind("<Key>", handle_winner_keypress)
+    stateVars.root.after(7000, lambda: globals().update(winner_can_exit=True))
 
 def flash_winner_colors():
     global winner_timer_id, winner_flashing
     if not winner_flashing:
         return
-    current_bg = root.cget("bg")
+    current_bg = stateVars.root.cget("bg")
     comp_color = "#001133"
     next_bg = comp_color if current_bg == background_colour else background_colour
-    root.configure(bg=next_bg)
-    crt_canvas.configure(bg=next_bg)
+    stateVars.root.configure(bg=next_bg)
+    stateVars.crt_canvas.configure(bg=next_bg)
     quizQuestionLabel.config(bg=next_bg)
-    winner_timer_id = root.after(250, flash_winner_colors)
+    winner_timer_id = stateVars.root.after(250, flash_winner_colors)
 
 def handle_winner_keypress(event):
     global winner_flashing, winner_timer_id, winner_can_exit
     if not winner_can_exit or event.char.lower() != 'n':
         return "break"
     if winner_timer_id:
-        root.after_cancel(winner_timer_id)
+        stateVars.root.after_cancel(winner_timer_id)
         winner_timer_id = None
     winner_flashing = False
-    root.unbind("<Key>")
-    root.configure(bg=background_colour)
-    crt_canvas.configure(bg=background_colour)
+    stateVars.root.unbind("<Key>")
+    stateVars.root.configure(bg=background_colour)
+    stateVars.crt_canvas.configure(bg=background_colour)
     quizQuestionLabel.config(bg=background_colour, fg=foreground_colour, font=descFont)
     quizQuestionLabel.place_forget()
     titleLabel.place(x=(rootWidth // 2), y=20, anchor="n")
     pygame.mixer.music.set_volume(0.3)
-    crt_canvas.itemconfigure("scanlines", state="normal")
-    crt_canvas.itemconfigure(moving_scanline, state="normal")
+    stateVars.crt_canvas.itemconfigure("scanlines", state="normal")
+    stateVars.crt_canvas.itemconfigure(moving_scanline, state="normal")
     show_terminal_from_quiz()
     print_term("Quiz finished and winner crowned. \n")
     return "break"
@@ -840,9 +842,9 @@ def handle_winner_keypress(event):
 def end_quiz(msg):
     global current_timer_id
     if current_timer_id:
-        root.after_cancel(current_timer_id)
+        stateVars.root.after_cancel(current_timer_id)
         current_timer_id = None
-    root.unbind("<Key>")
+    stateVars.root.unbind("<Key>")
     quizPlayerLabel.place_forget()
     quizQuestionLabel.place_forget()
     quizTimerLabel.place_forget()
@@ -851,8 +853,8 @@ def end_quiz(msg):
     quizQuitButton.place_forget()
     titleLabel.place(x=(rootWidth // 2), y=20, anchor="n")
     pygame.mixer.music.set_volume(0.3)
-    crt_canvas.itemconfigure("scanlines", state="normal")
-    crt_canvas.itemconfigure(moving_scanline, state="normal")
+    stateVars.crt_canvas.itemconfigure("scanlines", state="normal")
+    stateVars.crt_canvas.itemconfigure(moving_scanline, state="normal")
     show_terminal_from_quiz()
     print_term(msg)
 
@@ -894,10 +896,10 @@ def execute_command(e=None):
         "syntax": lambda: (show_syntax()),
         "rickroll": lambda: (print_term("RICKROLL!\n"), webbrowser.open_new("https://www.youtube.com/watch?v=a7Lq6ZlSqys")),
         "luck": lambda: (print_term("Opening Lucky Gamble... \n"), testLuck()),
-        "clear": lambda: (clear_term(), root.after(100, termText.insert("end", "CRT OS v1.0\nType 'help' for commands. \n\n> "))),
-        "cls": lambda: (clear_term(), root.after(100, termText.insert("end", "CRT OS v1.0\nType 'help' for commands. \n\n> "))),
+        "clear": lambda: (clear_term(), stateVars.root.after(100, termText.insert("end", "CRT OS v1.0\nType 'help' for commands. \n\n> "))),
+        "cls": lambda: (clear_term(), stateVars.root.after(100, termText.insert("end", "CRT OS v1.0\nType 'help' for commands. \n\n> "))),
         "about": lambda: (print_term("Terra (Hackclub) CRT App! Check out the GitHub for more info! \n"), openMePages()),
-        "exit": root.destroy
+        "exit": stateVars.root.destroy
     }
 
     for cmd in sub_commands:
@@ -920,4 +922,4 @@ except Exception as e:
 # Initialise main window
 apply_crt_flicker()
 termEntry.bind("<Return>", execute_command)
-root.mainloop()
+stateVars.root.mainloop()

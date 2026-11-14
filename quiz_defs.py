@@ -95,25 +95,25 @@ def process_print_queue():
 
     stateVars.is_printing = False
     text_to_print = stateVars.print_queue.pop(0)
-    stateVars.termText.config(state="normal")
+    stateVars.termText.config(stateVars="normal")
     stateVars.termText.insert("end", "\n")
-    stateVars.termText.config(state="disabled")
+    stateVars.termText.config(stateVars="disabled")
 
     def type_chars(remaining_text):
-        stateVars.termText.config(state="normal")
+        stateVars.termText.config(stateVars="normal")
         if remaining_text:
             stateVars.termText.insert("end", remaining_text[0])
             stateVars.termText.see("end")
-            stateVars.termText.config(state="disabled")
+            stateVars.termText.config(stateVars="disabled")
             stateVars.root.after(25, lambda: type_chars(remaining_text[1:]))
         else:
-            stateVars.termText.config(state="normal")
+            stateVars.termText.config(stateVars="normal")
             if stateVars.print_queue:
                 pass
             else:
                 stateVars.termText.insert("end", "\n> ")
             stateVars.termText.see("end")
-            stateVars.termText.config(state="disabled")
+            stateVars.termText.config(stateVars="disabled")
             process_print_queue()
 
     stateVars.root.after(100, lambda: type_chars(text_to_print))
@@ -125,9 +125,9 @@ def print_term(text):
 
 # Terminal commands
 def clear_term():
-    stateVars.termText.config(state="normal")
+    stateVars.termText.config(stateVars="normal")
     stateVars.termText.delete("1.0", "end")
-    stateVars.termText.config(state="disabled")
+    stateVars.termText.config(stateVars="disabled")
     print_term("")
 
 def load_playerlist():
@@ -229,7 +229,7 @@ def force_quit_quiz():
     stateVars.quizPauseButton.place_forget()
     stateVars.quizQuitButton.place_forget()
     stateVars.titleLabel.place(x=(stateVars.rootWidth // 2), y=20, anchor="n")
-    stateVars.crt_canvas.itemconfigure(stateVars.moving_scanline, state="normal")
+    stateVars.crt_canvas.itemconfigure(stateVars.moving_scanline, stateVars="normal")
     pygame.mixer.music.set_volume(0.3)
     show_terminal_from_quiz()
     print_term("Quiz force quit by user \n")
@@ -356,16 +356,16 @@ def hide_terminal_for_quiz():
     stateVars.termText.place_forget()
     stateVars.promptLabel.place_forget()
     stateVars.termEntry.place_forget()
-    stateVars.crt_canvas.itemconfigure("scanlines", state="hidden")
-    stateVars.crt_canvas.itemconfigure(stateVars.moving_scanline, state="hidden")
+    stateVars.crt_canvas.itemconfigure("scanlines", stateVars="hidden")
+    stateVars.crt_canvas.itemconfigure(stateVars.moving_scanline, stateVars="hidden")
     stateVars.root.focus_set()
 
 def show_terminal_from_quiz():
     stateVars.termText.place(x=15, y=80, width=(stateVars.rootWidth - 30), height=(stateVars.rootHeight - 200))
     stateVars.promptLabel.place(x=15, y=(stateVars.rootHeight - 55))
     stateVars.termEntry.place(x=35, y=(stateVars.rootHeight - 55), width=(stateVars.rootWidth - 50), height=30)
-    stateVars.crt_canvas.itemconfigure("scanlines", state="normal")
-    stateVars.crt_canvas.itemconfigure(stateVars.moving_scanline, state="normal")
+    stateVars.crt_canvas.itemconfigure("scanlines", stateVars="normal")
+    stateVars.crt_canvas.itemconfigure(stateVars.moving_scanline, stateVars="normal")
     stateVars.termEntry.focus()
 
 def show_next_quiz_turn():
@@ -426,8 +426,8 @@ def start_actual_question():
 
     playerFont = font.Font(family=stateVars.mainFontFamily, size=48, weight="bold", underline=True)
     statusFont = font.Font(family=stateVars.mainFontFamily, size=17)
-    questionFont = font.Font(family=mainFontFamily, size=24, weight="bold")
-    timerFont = font.Font(family=mainFontFamily, size=18, weight="bold")
+    questionFont = font.Font(family=stateVars.mainFontFamily, size=24, weight="bold")
+    timerFont = font.Font(family=stateVars.mainFontFamily, size=18, weight="bold")
 
     stateVars.quizPlayerLabel.config(text=player['name'], fg=stateVars.foreground_colour, font=playerFont)
     stateVars.quizPlayerLabel.place(x=(stateVars.rootWidth // 2), y=15, anchor="n")
@@ -474,18 +474,245 @@ def handle_timeout():
     prepare_for_next_turn()
 
 def flash_screen(colour, message):
+
+    winnerFont = font.Font(family=stateVars.mainFontFamily, size=48, underline=True, weight="bold")
+
     stateVars.waiting_for_next = True
-    if current_timer_id:
-        root.after_cancel(current_timer_id)
-        current_timer_id = None
+    if stateVars.current_timer_id:
+        stateVars.root.after_cancel(stateVars.current_timer_id)
+        stateVars.current_timer_id = None
     
-    root.configure(bg=colour)
-    crt_canvas.configure(bg=colour)
-    quizPlayerLabel.config(bg=colour, fg="#000000")
-    quizQuestionLabel.config(bg=colour, fg="#000000", font=winnerFont)
-    quizTimerLabel.config(bg=colour, fg="#000000")
-    quizStatusLabel.config(bg=colour, fg="#000000")
-    quizPauseButton.place_forget()
-    quizQuitButton.place_forget()
+    stateVars.root.configure(bg=colour)
+    stateVars.crt_canvas.configure(bg=colour)
+    stateVars.quizPlayerLabel.config(bg=colour, fg="#000000")
+    stateVars.quizQuestionLabel.config(bg=colour, fg="#000000", font=winnerFont)
+    stateVars.quizTimerLabel.config(bg=colour, fg="#000000")
+    stateVars.quizStatusLabel.config(bg=colour, fg="#000000")
+    stateVars.quizPauseButton.place_forget()
+    stateVars.quizQuitButton.place_forget()
     
-    quizQuestionLabel.config(text=message)
+    stateVars.quizQuestionLabel.config(text=message)
+
+def prepare_for_next_turn():
+    stateVars.waiting_for_next = True
+
+def reset_screen_colours():
+
+    playerFont = font.Font(family=stateVars.mainFontFamily, size=48, weight="bold", underline=True)
+    questionFont = font.Font(family=stateVars.mainFontFamily, size=24, weight="bold")
+    timerFont = font.Font(family=stateVars.mainFontFamily, size=18, weight="bold")
+    statusFont = font.Font(family=stateVars.mainFontFamily, size=17)
+
+    stateVars.root.configure(bg=stateVars.background_colour)
+    stateVars.crt_canvas.configure(bg=stateVars.background_colour)
+    stateVars.quizPlayerLabel.config(bg=stateVars.background_colour, fg=stateVars.foreground_colour, font=playerFont)
+    stateVars.quizQuestionLabel.config(bg=stateVars.background_colour, fg=stateVars.foreground_colour, font=questionFont)
+    stateVars.quizTimerLabel.config(bg=stateVars.background_colour, fg=stateVars.foreground_colour, font=timerFont)
+    stateVars.quizStatusLabel.config(bg=stateVars.background_colour, fg=stateVars.foreground_colour, font=statusFont)
+
+def handle_quiz_keypress(event):
+    playerFont = font.Font(family=stateVars.mainFontFamily, size=48, weight="bold", underline=True)
+    questionFont = font.Font(family=stateVars.mainFontFamily, size=24, weight="bold")
+    statusFont = font.Font(family=stateVars.mainFontFamily, size=17)
+    timerFont = font.Font(family=stateVars.mainFontFamily, size=18, weight="bold")
+
+    player = stateVars.quiz_active_players[stateVars.current_player_idx]
+    key = event.char.lower()
+
+    if stateVars.waiting_for_next:
+        if key == 'n':
+            reset_screen_colours()
+            if stateVars.is_last_chance_action:
+                stateVars.is_last_chance_action = False
+                stateVars.waiting_for_next = False
+                stateVars.quizPlayerLabel.config(text=player['name'], fg=stateVars.foreground_colour, font=playerFont)
+                stateVars.quizPlayerLabel.place(x=(stateVars.rootWidth // 2), y=15, anchor="n")
+                stateVars.quizQuestionLabel.config(text=stateVars.quiz_active_questions[stateVars.current_question_idx], fg=stateVars.foreground_colour, font=questionFont)
+                stateVars.quizQuestionLabel.place(x=(stateVars.rootWidth // 2), y=120, anchor="n")
+
+                status_text = f"Skips Left: {player['skips']}"
+                if stateVars.quiz_settings['default_last_chance']:
+                    status_text += f" | Last Chance: {'FINAL CHANCE' if player['last_chance'] else 'NO'}"
+                stateVars.quizStatusLabel.config(text=status_text, fg=stateVars.foreground_colour, font=statusFont)
+                stateVars.quizStatusLabel.place(x=(stateVars.rootWidth // 2), y=330, anchpr="n")
+
+                stateVars.quizTimerLabel.config(text=f"Time Remaining: {stateVars.time_remaining}s", fg=stateVars.foreground_colour, font=timerFont)
+                stateVars.quizTimerLabel.place(x=(stateVars.rootWidth // 2), y=410, anchor="n")
+
+                stateVars.quizPauseButton.place(x=(stateVars.rootWidth // 2 - 110), y=500, width=100, height=40)
+                stateVars.quizQuitButton.place(x=(stateVars.rootWidth // 2 + 10), y=500, width=100, height=40)
+
+                stateVars.root.bind("<Key>", handle_quiz_keypress)
+                if stateVars.current_timer_id:
+                    stateVars.root.after_cancel(stateVars.current_timer_id)
+                stateVars.current_timer_id = stateVars.root.after(1000, update_quiz_timer)
+            else:
+                stateVars.quizPlayerLabel.place_forget()
+                stateVars.quizQuestionLabel.place_forget()
+                stateVars.quizTimerLabel.place_forget()
+                stateVars.quizStatusLabel.place_forget()
+                stateVars.quizPauseButton.place_forget()
+                stateVars.quizQuitButton.place_forget()
+                stateVars.titleLabel.place(x=(stateVars.rootWidth // 2), y=20, anchor="n")
+
+                stateVars.current_question_idx += 1
+                stateVars.current_player_idx = (stateVars.current_player_idx + 1) % len(stateVars.quiz_active_players)
+                show_next_quiz_turn()
+            return "break"
+
+    if stateVars.current_timer_id:
+        stateVars.root.after_cancel(stateVars.current_timer_id)
+        stateVars.current_timer_id = None
+
+    if key == 'y':
+        flash_screen("#00FF00", "CORRECT")
+        prepare_for_next_turn()
+    elif key == 'i':
+        if stateVars.quiz_settings['default_last_chance'] and not player['last_chance']:
+            player['last_chance'] = True
+            flash_screen("#8B0000", "INCORRECT & LAST CHANCE")
+        else:
+            player['eliminated'] = True
+            flash_screen("#8B0000", "INCORRECT & ELIMINATED")
+        prepare_for_next_turn()
+    elif key == 'p':
+        if player['skips'] > 0:
+            player['skips'] -= 1
+            flash_screen("#FFFFFF", "SKIPPED")
+            prepare_for_next_turn()
+    elif key == 'q':
+        if stateVars.quiz_settings['default_last_chance'] and not player['last_chance']:
+            player['skips'] = 0
+            player['last_chance'] = True
+            stateVars.time_remaining += 5
+            stateVars.is_last_chance_action = True
+            stateVars.quizTimerLabel.config(text=f"Time: {stateVars.time_remaining}s")
+            flash_screen("#8B0000", "LAST CHANCE TRIGGERED")
+
+    return "break"
+
+def show_winner_screen(winner_name):
+    winnerFont = font.Font(family=stateVars.mainFontFamily, size=48, underline=True, weight="bold")
+
+    stateVars.waiting_for_next = True
+    stateVars.winner_can_exit = False
+    if stateVars.current_timer_id:
+        stateVars.root.after_cancel(stateVars.current_timer_id)
+        stateVars.current_timer_id = None
+
+    stateVars.titleLabel.place_forget()
+    stateVars.quizPlayerLabel.place_forget()
+    stateVars.quizTimerLabel.place_forget()
+    stateVars.quizStatusLabel.place_forget()
+    stateVars.quizPauseButton.place_forget()
+    stateVars.quizQuitButton.place_forget()
+    
+    stateVars.quizQuestionLabel.config(text=f"WINNER:\n{winner_name}", fg="#FFD700", font=winnerFont)
+    stateVars.quizQuestionLabel.place(x=(stateVars.rootWidth // 2), y=(stateVars.rootHeight // 2) - 80, anchor="center")
+    
+    stateVars.winner_flashing = True
+    flash_winner_colours()
+    stateVars.root.bind("<Key>", handle_winner_keypress)
+    stateVars.root.after(7000, lambda: setattr(stateVars, 'winner_can_exit', True))
+
+def flash_winner_colours():
+    if not stateVars.winner_flashing:
+        return
+    current_bg = stateVars.root.cget("bg")
+    comp_colour = "#001133"
+    next_bg = comp_colour if current_bg == stateVars.background_colour else stateVars.background_colour
+    stateVars.root.configure(bg=next_bg)
+    stateVars.crt_canvas.configure(bg=next_bg)
+    stateVars.quizQuestionLabel.config(bg=next_bg)
+    stateVars.winner_timer_id = stateVars.root.after(250, flash_winner_colours)
+
+def handle_winner_keypress(event):
+    descFont = font.Font(family=stateVars.mainFontFamily, size=14)
+
+    if not stateVars.winner_can_exit or event.char.lower() != 'n':
+        return "break"
+    if stateVars.winner_timer_id:
+        stateVars.root.after_cancel(stateVars.winner_timer_id)
+        stateVars.winner_timer_id = None
+    stateVars.winner_flashing = False
+    stateVars.root.unbind("<Key>")
+    stateVars.root.configure(bg=stateVars.background_colour)
+    stateVars.crt_canvas.configure(bg=stateVars.background_colour)
+    stateVars.quizQuestionLabel.config(bg=stateVars.background_colour, fg=stateVars.foreground_colour, font=descFont)
+    stateVars.quizQuestionLabel.place_forget()
+    stateVars.titleLabel.place(x=(stateVars.rootWidth // 2), y=20, anchor="n")
+    pygame.mixer.music.set_volume(0.3)
+    stateVars.crt_canvas.itemconfigure("scanlines", stateVars="normal")
+    stateVars.crt_canvas.itemconfigure(stateVars.moving_scanline, stateVars="normal")
+    show_terminal_from_quiz()
+    print_term("Quiz finished and winner has been crowned! \n")
+    return "break"
+
+def end_quiz(msg):
+    if stateVars.current_timer_id:
+        stateVars.root.after_cancel(stateVars.current_timer_id)
+        stateVars.current_timer_id = None
+    stateVars.root.unbind("<Key>")
+    stateVars.quizPlayerLabel.place_forget()
+    stateVars.quizQuestionLabel.place_forget()
+    stateVars.quizTimerLabel.place_forget()
+    stateVars.quizStatusLabel.place_forget()
+    stateVars.quizPauseButton.place_forget()
+    stateVars.quizQuitButton.place_forget()
+    stateVars.titleLabel.place(x=(stateVars.rootWidth // 2), y=20, anchor="n")
+    pygame.mixer.music.set_volume(0.3)
+    stateVars.crt_canvas.itemconfigure("scanlines", stateVars="normal")
+    stateVars.crt_canvas.itemconfigure(stateVars.moving_scanline, stateVars="normal")
+    show_terminal_from_quiz()
+    print_term(msg)
+
+def execute_command(e=None):
+    raw_cmd = stateVars.termEntry.get().strip().lower()
+    stateVars.termEntry.delete(0, "end")
+
+    if stateVars.quiz_setup_step > 0:
+        stateVars.termText.config(stateVars="normal")
+        stateVars.termText.insert("end", f"{raw_cmd}\n")
+        stateVars.termText.config(stateVars="disabled")
+        handle_quiz_setup_input(raw_cmd)
+        return
+
+    stateVars.termText.config(stateVars="normal")
+    stateVars.termText.insert("end", f"{raw_cmd}")
+    stateVars.termText.config(stateVars="disabled")
+
+    sub_commands = [c.strip() for c in raw_cmd.split("&&") if c.strip()]
+
+    commands = {
+        "help": lambda: print_term("Commands: quiz, syntax, rickroll, suggest, bug, luck, clear, about, exit, cls \n"),
+        "quiz": lambda: (print_term("Available commands: player, question, start, preface, keys, about \nCommands must start with 'quiz '\n"), stateVars.termEntry.insert(tk.END, "quiz ")),
+        "quiz preface": lambda: preface_quiz(),
+        "quiz keys": lambda: print_term("Quiz Key Bindings:\n- 'y': Correct\n- 'i': Incorrect\n- 'p': Skip\n- 'q': Last Chance\n- 'n': Next\n"),
+        "quiz about": lambda: print_term("Quiz Usage & Purpose...\n"),
+        "quiz start": lambda: start_quiz_setup(),
+        "quiz player": lambda: (print_term("Available commands: load, lookup, default\n"), stateVars.termEntry.insert(tk.END, "quiz player ")),
+        "quiz question": lambda: (print_term("Available commands: load, lookup, default\n"), stateVars.termEntry.insert(tk.END, "quiz question ")),
+        "quiz player load": lambda: load_playerlist(),
+        "quiz question load": lambda: load_questionlist(),
+        "quiz player lookup": lambda: show_playerlist(),
+        "quiz question lookup": lambda: show_questionlist(),
+        "quiz player default": lambda: load_default_players(),
+        "quiz question default": lambda: load_default_questions(),
+        "suggest": lambda: (print_term("Opening GitHub issue template...\n"), webbrowser.open_new("https://github.com/sadgituser/CRT-MultiApp/issues/new?template=bug_report.md")),
+        "bug": lambda: (print_term("Opening GitHub issue template...\n"), webbrowser.open_new("https://github.com/sadgituser/CRT-MultiApp/issues/new?template=suggest_feature.md")),
+        "syntax": lambda: show_syntax(),
+        "rickroll": lambda: (print_term("RICKROLL!\n"), webbrowser.open_new("https://www.youtube.com/watch?v=a7Lq6ZlSqys")),
+        "luck": lambda: (print_term("Opening Lucky Gamble...\n"), testLuck()),
+        "clear": lambda: (clear_term(), stateVars.root.after(100, stateVars.termText.insert("end", "CRT OS v1.0\nType 'help' for commands. \n\n> "))),
+        "cls": lambda: (clear_term(), stateVars.root.after(100, stateVars.termText.insert("end", "CRT OS v1.0\nType 'help' for commands. \n\n> "))),
+        "about": lambda: (print_term("Terra CRT App!\n"), openMePages()),
+        "exit": stateVars.root.destroy
+    }
+
+    for cmd in sub_commands:
+        if cmd in commands:
+            commands[cmd]()
+        else:
+            print_term(f"Unknown command: '{cmd}'. Type 'help'.\n")
+            break
+
